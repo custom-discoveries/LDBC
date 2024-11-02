@@ -1,0 +1,72 @@
+#
+# Copyright (c) 2024, Custom Discoveries Inc.
+# All rights reserved.
+#
+#
+# Example of loading Edges from one data load file
+#
+Use Graph LDBC_Graph
+CREATE LOADING JOB LDBC_Graph_Edge_Job FOR GRAPH LDBC_Graph {
+
+#define edges
+DEFINE FILENAME person_knows_person_file = "./GraphData/person_knows_person_0_0.csv";
+DEFINE FILENAME comment_reply_of_post_file = "./GraphData/comment_replyOf_post_0_0.csv";
+DEFINE FILENAME comment_reply_of_comment_file = "./GraphData/comment_replyOf_comment_0_0.csv";
+DEFINE FILENAME post_has_creator_person_file = "./GraphData/post_hasCreator_person_0_0.csv";
+DEFINE FILENAME post_has_tag_tag_file = "./GraphData/post_hasTag_tag_0_0.csv";
+DEFINE FILENAME comment_has_creator_person_file = "./GraphData/comment_hasCreator_person_0_0.csv";
+DEFINE FILENAME post_is_located_in_place_file = "./GraphData/post_isLocatedIn_place_0_0.csv";
+DEFINE FILENAME comment_has_tag_tag_file = "./GraphData/comment_hasTag_tag_0_0.csv";
+DEFINE FILENAME comment_is_located_in_place_file = "./GraphData/comment_isLocatedIn_place_0_0.csv";
+DEFINE FILENAME forum_container_of_post_file = "./GraphData/forum_containerOf_post_0_0.csv";
+DEFINE FILENAME forum_has_member_person_file = "./GraphData/forum_hasMember_person_0_0.csv";
+DEFINE FILENAME forum_has_moderator_person_file = "./GraphData/forum_hasModerator_person_0_0.csv";
+DEFINE FILENAME forum_has_tag_tag_file = "./GraphData/forum_hasTag_tag_0_0.csv";
+DEFINE FILENAME organisation_is_located_in_place_file = "./GraphData/organisation_isLocatedIn_place_0_0.csv";
+DEFINE FILENAME person_has_interest_tag_file = "./GraphData/person_hasInterest_tag_0_0.csv";
+DEFINE FILENAME person_is_located_in_place_file = "./GraphData/person_isLocatedIn_place_0_0.csv";
+DEFINE FILENAME person_likes_comment_file = "./GraphData/person_likes_comment_0_0.csv";
+DEFINE FILENAME person_likes_post_file = "./GraphData/person_likes_post_0_0.csv";
+DEFINE FILENAME person_study_at_organisation_file = "./GraphData/person_studyAt_organisation_0_0.csv";
+DEFINE FILENAME person_work_at_organisation_file = "./GraphData/person_workAt_organisation_0_0.csv";
+DEFINE FILENAME place_is_part_of_place_file = "./GraphData/place_isPartOf_place_0_0.csv";
+DEFINE FILENAME tag_has_type_tagclass_file = "./GraphData/tag_hasType_tagclass_0_0.csv";
+DEFINE FILENAME tagclass_is_subclass_of_tagclass_file = "./GraphData/tagclass_isSubclassOf_tagclass_0_0.csv";
+
+# Load Edges
+LOAD forum_container_of_post_file TO EDGE CONTAINER_OF VALUES ($0, $1) USING header="true", separator="|";
+LOAD comment_has_creator_person_file TO EDGE HAS_CREATOR VALUES ($0 Comment, $1) USING header="true", separator="|";
+LOAD post_has_creator_person_file TO EDGE HAS_CREATOR VALUES ($0 Post, $1) USING header="true", separator="|";
+LOAD person_has_interest_tag_file TO EDGE HAS_INTEREST VALUES ($0, $1) USING header="true", separator="|";
+LOAD forum_has_member_person_file TO EDGE HAS_MEMBER VALUES ($0, $1, $2) USING header="true", separator="|";
+LOAD forum_has_moderator_person_file TO EDGE HAS_MODERATOR VALUES ($0, $1) USING header="true", separator="|";
+LOAD comment_has_tag_tag_file TO EDGE HAS_TAG VALUES ($0 Comment, $1) USING header="true", separator="|";
+LOAD post_has_tag_tag_file TO EDGE HAS_TAG VALUES ($0 Post, $1) USING header="true", separator="|";
+LOAD forum_has_tag_tag_file TO EDGE HAS_TAG VALUES ($0 Forum, $1) USING header="true", separator="|";
+LOAD tag_has_type_tagclass_file TO EDGE HAS_TYPE VALUES ($0, $1) USING header="true", separator="|";
+
+LOAD organisation_is_located_in_place_file TO EDGE IS_LOCATED_IN VALUES ($0 Company, $1 Country) WHERE to_int($1) < 111 USING header="true", separator="|";
+LOAD organisation_is_located_in_place_file TO EDGE IS_LOCATED_IN VALUES ($0 University, $1 City) WHERE to_int($1) > 110 USING header="true", separator="|";
+
+LOAD comment_is_located_in_place_file TO EDGE IS_LOCATED_IN VALUES ($0 Comment, $1 Country) USING header="true", separator="|";
+LOAD post_is_located_in_place_file TO EDGE IS_LOCATED_IN VALUES ($0 Post, $1 Country) USING header="true", separator="|";
+LOAD person_is_located_in_place_file TO EDGE IS_LOCATED_IN VALUES ($0 Person, $1 City) USING header="true", separator="|";
+
+LOAD place_is_part_of_place_file TO EDGE IS_PART_OF VALUES ($0 Country, $1 Continent) WHERE to_int($0) < 111 USING header="true", separator="|";
+LOAD place_is_part_of_place_file TO EDGE IS_PART_OF VALUES ($0 City, $1 Country) WHERE to_int($0) > 110 USING header="true", separator="|";
+
+LOAD tagclass_is_subclass_of_tagclass_file TO EDGE IS_SUBCLASS_OF VALUES ($0, $1) USING header="true", separator="|";
+LOAD person_knows_person_file TO EDGE KNOWS VALUES ($0, $1, $2) USING header="true", separator="|";
+LOAD person_likes_comment_file TO EDGE LIKES VALUES ($0, $1 Comment, $2) USING header="true", separator="|";
+LOAD person_likes_post_file TO EDGE LIKES VALUES ($0, $1 Post, $2) USING header="true", separator="|";
+LOAD comment_reply_of_comment_file TO EDGE REPLY_OF VALUES ($0, $1 Comment) USING header="true", separator="|";
+LOAD comment_reply_of_post_file TO EDGE REPLY_OF VALUES ($0, $1 Post) USING header="true", separator="|";
+LOAD person_study_at_organisation_file TO EDGE STUDY_AT VALUES ($0, $1, $2) USING header="true", separator="|";
+LOAD person_work_at_organisation_file TO EDGE WORK_AT VALUES ($0, $1, $2) USING header="true", separator="|";
+
+}
+#run the Edge loading job
+RUN LOADING JOB LDBC_Graph_Edge_Job
+
+#drop the job, indicating the job is completed
+DROP JOB LDBC_Graph_Edge_Job

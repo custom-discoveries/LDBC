@@ -1,0 +1,50 @@
+#
+# Copyright (c) 2024, Custom Discoveries Inc.
+# All rights reserved.
+#
+#
+# Example of loading Vertex from one data load file
+#
+Use Graph LDBC_Graph
+CREATE LOADING JOB LDBC_Graph_Vertex_Job FOR GRAPH LDBC_Graph {
+
+# define vertex
+DEFINE FILENAME v_comment_file_0 = "./GraphData/comment-part-00.csv";
+DEFINE FILENAME v_comment_file_1 = "./GraphData/comment-part-01.csv";
+DEFINE FILENAME v_comment_file_2 = "./GraphData/comment-part-02.csv";
+DEFINE FILENAME v_post_file_0 = "./GraphData/post-00.csv";
+DEFINE FILENAME v_post_file_1 = "./GraphData/post-01.csv";
+DEFINE FILENAME v_organisation_file = "./GraphData/organisation_0_0.csv";
+DEFINE FILENAME v_place_file = "./GraphData/place_0_0.csv";
+DEFINE FILENAME v_forum_file = "./GraphData/forum_0_0.csv";
+DEFINE FILENAME v_person_file = "./GraphData/person_0_0.csv";
+DEFINE FILENAME v_tag_file = "./GraphData/tag_0_0.csv";
+DEFINE FILENAME v_tagclass_file = "./GraphData/tagclass_0_0.csv";
+
+# load vertex
+LOAD v_comment_file_0 TO VERTEX Comment VALUES ($0, $1, $2, $3, $4, $5, _) USING header="true", separator="|";
+LOAD v_comment_file_1 TO VERTEX Comment VALUES ($0, $1, $2, $3, $4, $5, _) USING header="true", separator="|";
+LOAD v_comment_file_2 TO VERTEX Comment VALUES ($0, $1, $2, $3, $4, $5, _) USING header="true", separator="|";
+
+LOAD v_post_file_0 TO VERTEX Post VALUES ($0, $1, $2, $3, $4, $5, $6, $7, _) USING header="true", separator="|";
+LOAD v_post_file_1 TO VERTEX Post VALUES ($0, $1, $2, $3, $4, $5, $6, $7, _) USING header="true", separator="|";
+
+LOAD v_organisation_file TO VERTEX Company VALUES ($0, $2, $3) WHERE $1=="company" USING header="true", separator="|";
+LOAD v_organisation_file TO VERTEX University VALUES ($0, $2, $3) WHERE $1=="university" USING header="true", separator="|";
+
+LOAD v_place_file TO VERTEX City VALUES ($0, $1, $2) WHERE $3=="city" USING header="true", separator="|";
+LOAD v_place_file TO VERTEX Country VALUES ($0, $1, $2) WHERE $3=="country" USING header="true", separator="|";
+LOAD v_place_file TO VERTEX Continent VALUES ($0, $1, $2) WHERE $3=="continent" USING header="true", separator="|";
+
+LOAD v_forum_file TO VERTEX Forum VALUES ($0, $1, $2) USING header="true", separator="|";
+LOAD v_person_file TO VERTEX Person VALUES ($0, $1, $2, $3, $4, $5, $6, $7, SPLIT($8,";"), SPLIT($9,";")) USING header="true", separator="|";
+LOAD v_tag_file TO VERTEX Tag VALUES ($0, $1, $2) USING header="true", separator="|";
+LOAD v_tagclass_file TO VERTEX TagClass VALUES ($0, $1, $2) USING header="true", separator="|";
+
+}
+
+#run the Vertex loading job
+RUN LOADING JOB LDBC_Graph_Vertex_Job
+
+#drop the job, indicating the job is completed
+DROP JOB LDBC_Graph_Vertex_Job
