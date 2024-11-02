@@ -11,5 +11,5 @@ LDBC currently offers the following benchmarks:
   - [Social Network Benchmark Suite](http://ldbcouncil.org/benchmarks/snb/) (SNB): The SNB targets database management systems with graph-processing capabilities. It consists of two workloads, Interactive and Business Intelligence
 
 # Social Network Benchmark (SNB)
-This repository is supporting the LDBC Social Network Benchmark for TigerGraph. To run this benchmark will require you to install User Defined Functions (UDF) for two of the queires (interactiveComplex14.gsql & interactiveInsert1.gsql). See supporting files under UDF directory.
-
+This repository is supporting the LDBC Social Network Benchmark for TigerGraph. To run this benchmark will require you to install User Defined Functions (UDF) for two of the queires (interactiveComplex14.gsql & interactiveInsert1.gsql)[^1].
+[^1]: See supporting function files under UDF directory.
