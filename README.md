@@ -1,5 +1,5 @@
 # LDBC
-Linked Data Benchmark Council (LDBC) is a non-profit organization aiming to define standard graph benchmarks to foster a community around graph processing technologies. 
+[Linked Data Benchmark Council](http://ldbcouncil.org) (LDBC) is a non-profit organization aiming to define standard graph benchmarks to foster a community around graph processing technologies. 
 
 LDBC defines standard graph benchmarks to accelerate progress in graph data management similarly to what TPC has been doing in the relational data management space. LDBC is also active in promoting standard graph query languages such as SQL and SQL/PGQ. For a brief introduction, see the presentation on LDBC and the accompanying [paper](http://ldbcouncil.org/docs/papers/ldbc-organization-tpctc2023-preprint.pdf).
 
